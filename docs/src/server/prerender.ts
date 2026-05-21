@@ -117,6 +117,7 @@ async function crawl(router: Router, urlPath: string, outputDir: string) {
     ]
       .filter((href): href is string => !!href && !isAbsoluteUrl(href))
       .map((href) => resolveRelativeLink(href, urlPath))
+      .filter((href) => !href.startsWith('/pagefind/'))
 
     // Honor `<meta name="robots" content="nofollow">` (e.g. on package
     // overview pages) by skipping anchor discovery. Per-link `rel="nofollow"`
@@ -139,6 +140,7 @@ async function crawl(router: Router, urlPath: string, outputDir: string) {
       .map((link) => link.getAttribute('href'))
       .filter((href): href is string => !!href && !isAbsoluteUrl(href))
       .map((href) => resolveRelativeLink(href, urlPath))
+      .filter((href) => !href.startsWith('/pagefind/'))
       .flatMap((href) => {
         let match = docsMatcher.match(`http://localhost${href}`)
         return match ? [href, routes.markdown.href(match.params)] : [href]
