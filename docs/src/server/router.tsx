@@ -20,6 +20,7 @@ const REPO_DIR = path.resolve(DOCS_DIR, '..')
 const BUILD_DIR = path.join(REPO_DIR, 'docs', 'build')
 const MD_DIR = path.join(BUILD_DIR, 'md')
 const PUBLIC_DIR = path.join(BUILD_DIR, 'public')
+const SITE_DIR = path.join(BUILD_DIR, 'site')
 const REMIX_PKG_JSON = path.join(REPO_DIR, 'packages', 'remix', 'package.json')
 
 const { docFiles: markdownFiles, docFilesLookup } = await discoverMarkdownFiles(MD_DIR)
@@ -44,7 +45,15 @@ export const getDefaultVersions = (): Versions => {
 }
 
 export function createRouter(versions: Versions) {
-  const router = _createRouter({ middleware: [staticFiles(PUBLIC_DIR)] })
+  const middleware = [staticFiles(PUBLIC_DIR)]
+
+  // Serve pre-built Pagefind bundle if available. Falls back gracefully when
+  // the site hasn't been prerendered yet (search simply won't initialise).
+  if (fs.existsSync(path.join(SITE_DIR, 'pagefind'))) {
+    middleware.push(staticFiles(SITE_DIR, { filter: (p) => p.startsWith('pagefind/') }))
+  }
+
+  const router = _createRouter({ middleware })
 
   const respond = {
     async file(request: Request, filePath: string, name?: string) {
