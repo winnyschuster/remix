@@ -2,6 +2,39 @@
 
 This is the changelog for [`remix`](https://github.com/remix-run/remix/tree/main/packages/remix). It follows [semantic versioning](https://semver.org/).
 
+## v3.0.0-beta.4
+
+### Pre-release Changes
+
+- BREAKING CHANGE: Middleware consumed through `remix/router` and `remix/fetch-router` must now explicitly continue the request chain by calling `next()` or return a `Response`. Middleware that returned `undefined` without calling `next()` now throws at runtime instead of implicitly continuing.
+
+  Update context-loading middleware to return the downstream response:
+
+  ```ts
+  function loadUser(): Middleware {
+    return (context, next) => {
+      context.set(CurrentUser, user)
+      return next()
+    }
+  }
+  ```
+
+- Bumped `@remix-run/*` dependencies:
+  - [`async-context-middleware@0.3.3`](https://github.com/remix-run/remix/releases/tag/async-context-middleware@0.3.3)
+  - [`auth@0.2.5`](https://github.com/remix-run/remix/releases/tag/auth@0.2.5)
+  - [`auth-middleware@0.2.3`](https://github.com/remix-run/remix/releases/tag/auth-middleware@0.2.3)
+  - [`compression-middleware@0.1.11`](https://github.com/remix-run/remix/releases/tag/compression-middleware@0.1.11)
+  - [`cop-middleware@0.1.6`](https://github.com/remix-run/remix/releases/tag/cop-middleware@0.1.6)
+  - [`cors-middleware@0.1.6`](https://github.com/remix-run/remix/releases/tag/cors-middleware@0.1.6)
+  - [`csrf-middleware@0.1.6`](https://github.com/remix-run/remix/releases/tag/csrf-middleware@0.1.6)
+  - [`fetch-router@0.20.0`](https://github.com/remix-run/remix/releases/tag/fetch-router@0.20.0)
+  - [`form-data-middleware@0.3.3`](https://github.com/remix-run/remix/releases/tag/form-data-middleware@0.3.3)
+  - [`logger-middleware@0.3.3`](https://github.com/remix-run/remix/releases/tag/logger-middleware@0.3.3)
+  - [`method-override-middleware@0.1.11`](https://github.com/remix-run/remix/releases/tag/method-override-middleware@0.1.11)
+  - [`render-middleware@0.1.3`](https://github.com/remix-run/remix/releases/tag/render-middleware@0.1.3)
+  - [`session-middleware@0.3.3`](https://github.com/remix-run/remix/releases/tag/session-middleware@0.3.3)
+  - [`static-middleware@0.4.12`](https://github.com/remix-run/remix/releases/tag/static-middleware@0.4.12)
+
 ## v3.0.0-beta.3
 
 ### Pre-release Changes
